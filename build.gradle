@@ -145,6 +145,7 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
+    mavenCentral()
     maven {
         url "https://cursemaven.com"
         content {
@@ -154,11 +155,16 @@ repositories {
 }
 
 dependencies {
+
+    implementation 'org.projectlombok:lombok:1.18.20'
+
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.18.2-40.1.79'
+    //Json
 
+    //Http server
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
@@ -178,7 +184,7 @@ jar {
         attributes([
                 "Specification-Title"     : "cinematic",
                 "Specification-Vendor"    : "MitosV",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Version"   : "1.0.0-Alpha", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "MitosV",

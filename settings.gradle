@@ -8,6 +8,7 @@ pluginManagement {
                 includeGroup "curse.maven"
             }
         }
+        mavenCentral()
     }
 
 }

@@ -21,7 +21,7 @@ modId="cinematic" #mandatory
 # see the associated build.gradle script for how to populate this completely automatically during a build
 version="${file.jarVersion}" #mandatory
 # A display name for the mod
-displayName="Cinematic" #mandatory
+displayName="Cinematic Mod" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -29,13 +29,21 @@ displayName="Cinematic" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="cinematic.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="Nick1st - creator of Fancy Video API" #optional
 # A text field displayed in the mod UI
-authors="Love, Cheese and small house plants" #optional
+authors="MitosV" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Cinematic Mod
+Display videos in minecraft
 '''
+
+[[dependencies.cinematic]]
+modId="fancyvideo_api"
+mandatory=true
+versionRange="[0.2.0.0,)"
+ordering="AFTER"
+side="CLIENT"
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.cinematic]] #optional
 # the modid of the dependency
