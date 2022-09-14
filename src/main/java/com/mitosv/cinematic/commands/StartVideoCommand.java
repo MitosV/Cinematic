@@ -37,6 +37,7 @@ public class StartVideoCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher){
 
         dispatcher.register(Commands.literal("cinematic")
+                .requires((command)->command.hasPermission(2))
                 .then(Commands.argument("target", EntityArgument.players())
                         .then(Commands.argument("volume",IntegerArgumentType.integer())
                                 .suggests(INT)

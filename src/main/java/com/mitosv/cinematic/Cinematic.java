@@ -54,7 +54,7 @@ public final class Cinematic {
     }
 
     private void onlyClient(){
-        LOGGER.info("This is client version");
+        LOGGER.info("Cinematic Mod is loaded in client");
         MinecraftForge.EVENT_BUS.register(ClientHandler.class);
 
         FancyEvents fancyEvents = new FancyEvents();
@@ -67,7 +67,7 @@ public final class Cinematic {
     }
 
     private void onlyServer(MinecraftServer MCserver){
-        LOGGER.info("This is Server Version");
+        LOGGER.info("Cinematic Mod is loaded in server");
         final File VIDEO_DIR = new File(MCserver.getServerDirectory(),"video");
         fileManager = new FileManager(VIDEO_DIR);
     }
