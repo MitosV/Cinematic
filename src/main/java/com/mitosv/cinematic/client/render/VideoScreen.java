@@ -1,6 +1,7 @@
 package com.mitosv.cinematic.client.render;
 
 import com.mitosv.cinematic.Cinematic;
+import com.mitosv.cinematic.util.FancyEvents;
 import com.mitosv.cinematic.util.KeyBinding;
 import com.mitosv.cinematic.util.Video;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -33,18 +34,18 @@ public class VideoScreen extends AbstractContainerScreen<AbstractContainerMenu> 
 
     public VideoScreen(Video video, int volume) {
         super(new VideoContainer(), Minecraft.getInstance().player != null ? Minecraft.getInstance().player.getInventory() :
-                null, new TextComponent(""));
-        if (MediaPlayerHandler.getInstance().getMediaPlayer(Cinematic.getResourceLocation()).providesAPI()) {
+                null, new TextComponent(Cinematic.MOD_ID));
+        if (MediaPlayerHandler.getInstance().getMediaPlayer(FancyEvents.getResourceLocation()).providesAPI()) {
             Minecraft.getInstance().getSoundManager().pause();
-            MediaPlayerHandler.getInstance().getMediaPlayer(Cinematic.
+            MediaPlayerHandler.getInstance().getMediaPlayer(FancyEvents.
                     getResourceLocation()).api().media().prepare(video.getUrl());
-            MediaPlayerHandler.getInstance().getMediaPlayer(Cinematic.getResourceLocation()).api()
+            MediaPlayerHandler.getInstance().getMediaPlayer(FancyEvents.getResourceLocation()).api()
                     .events().addMediaEventListener(new MediaEventAdapter() {
                         @Override
                         public void mediaSubItemAdded(Media media, MediaRef newChild) {
                             Cinematic.LOGGER.info("item added");
                             MediaList mediaList = MediaPlayerHandler.getInstance().
-                                    getMediaPlayer(Cinematic.getResourceLocation()).api().media().subitems().newMediaList();
+                                    getMediaPlayer(FancyEvents.getResourceLocation()).api().media().subitems().newMediaList();
                             for (String mrl : mediaList.media().mrls()) {
                                 Cinematic.LOGGER.info("mrl=" + mrl);
                             }
@@ -55,14 +56,14 @@ public class VideoScreen extends AbstractContainerScreen<AbstractContainerMenu> 
                         public void mediaSubItemTreeAdded(Media media, MediaRef item) {
                             Cinematic.LOGGER.info("item tree added");
                             MediaList mediaList = MediaPlayerHandler.getInstance()
-                                    .getMediaPlayer(Cinematic.getResourceLocation()).api().media().subitems().newMediaList();
+                                    .getMediaPlayer(FancyEvents.getResourceLocation()).api().media().subitems().newMediaList();
                             for (String mrl : mediaList.media().mrls()) {
                                 Cinematic.LOGGER.info("mrl=" + mrl);
                             }
                             mediaList.release();
                         }
                     });
-            MediaPlayerHandler.getInstance().getMediaPlayer(Cinematic.getResourceLocation())
+            MediaPlayerHandler.getInstance().getMediaPlayer(FancyEvents.getResourceLocation())
                     .api().events().addMediaPlayerEventListener(new MediaPlayerEventListener() {
                         @Override
                         public void mediaChanged(MediaPlayer mediaPlayer, MediaRef mediaRef) {}
@@ -76,7 +77,8 @@ public class VideoScreen extends AbstractContainerScreen<AbstractContainerMenu> 
                         public void paused(MediaPlayer mediaPlayer) {}
                         @Override
                         public void stopped(MediaPlayer mediaPlayer) {
-                            if (!stopped) {
+                            if (!stopped){
+                                //Cinematic.setCinematic(false);
                                 onClose();
                             }
                         }
@@ -87,11 +89,7 @@ public class VideoScreen extends AbstractContainerScreen<AbstractContainerMenu> 
                         @Override
                         public void stopping(MediaPlayer mediaPlayer) {}
                         @Override
-                        public void finished(MediaPlayer mediaPlayer) {
-                            if (!stopped){
-                                Cinematic.setCinematic(false);
-                            }
-                        }
+                        public void finished(MediaPlayer mediaPlayer) {}
                         @Override
                         public void timeChanged(MediaPlayer mediaPlayer, long l) {}
                         @Override
@@ -141,7 +139,7 @@ public class VideoScreen extends AbstractContainerScreen<AbstractContainerMenu> 
                         @Override
                         public void mediaPlayerReady(MediaPlayer mediaPlayer) {}
                     });
-            MediaPlayerHandler.getInstance().getMediaPlayer(Cinematic.getResourceLocation()).api().audio().setVolume(volume);
+            MediaPlayerHandler.getInstance().getMediaPlayer(FancyEvents.getResourceLocation()).api().audio().setVolume(volume);
         }
     }
 
@@ -150,8 +148,8 @@ public class VideoScreen extends AbstractContainerScreen<AbstractContainerMenu> 
 
     @Override
     protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
-        mediaPlayer = (MediaPlayerBase) MediaPlayerHandler.getInstance().getMediaPlayer(Cinematic.getResourceLocation());
-        if (MediaPlayerHandler.getInstance().getMediaPlayer(Cinematic.getResourceLocation()).providesAPI()) {
+        mediaPlayer = (MediaPlayerBase) MediaPlayerHandler.getInstance().getMediaPlayer(FancyEvents.getResourceLocation());
+        if (MediaPlayerHandler.getInstance().getMediaPlayer(FancyEvents.getResourceLocation()).providesAPI()) {
             if (!init) {
                 mediaPlayer.api().controls().play();
                 init = true;
@@ -196,8 +194,8 @@ public class VideoScreen extends AbstractContainerScreen<AbstractContainerMenu> 
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
         if(pKeyCode == KeyBinding.EXIT_KEY.getKey().getValue()){
             this.onClose();
-        }
-        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+            return true;
+        }else return false;
     }
 
     @Override
@@ -208,12 +206,11 @@ public class VideoScreen extends AbstractContainerScreen<AbstractContainerMenu> 
     @Override
     public void onClose() {
         if (!stopped) {
-            Cinematic.setCinematic(false);
             stopped = true;
             Minecraft.getInstance().getSoundManager().resume();
             mediaPlayer.api().controls().stop();
-            super.onClose();
         }
+        super.onClose();
     }
 }
 

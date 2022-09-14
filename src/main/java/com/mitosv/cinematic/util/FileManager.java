@@ -14,9 +14,6 @@ import java.util.List;
 public class FileManager {
 
     private static FileManager instance;
-    private boolean isServer;
-
-    private static final String VIDEO_NAME_FILE = "videos";
 
     private File dir;
 
@@ -64,10 +61,6 @@ public class FileManager {
         File[] files = getFiles();
         if (files==null)return null;
         Video video = null;
-        if (name.equals("example_video_bunny.mp4")){
-            video = new Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            ,"Example Video Bunny");
-        }
         for (File file : files){
             if (name.equals(file.getName())){
                 video = getVideoFromFile(file);

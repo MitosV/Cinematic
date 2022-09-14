@@ -12,7 +12,6 @@ public class KeyBinding {
     public static final String KEY_EXIT = "key."+ Cinematic.MOD_ID+".exit";
 
     public static final KeyMapping EXIT_KEY = new KeyMapping(KEY_EXIT, KeyConflictContext.GUI,
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, KEY_CATEGORY);
-
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, KEY_CATEGORY);
 
 }

@@ -2,17 +2,22 @@ package com.mitosv.cinematic;
 
 import com.mitosv.cinematic.client.ClientHandler;
 import com.mitosv.cinematic.commands.RegisterCommands;
+import com.mitosv.cinematic.commands.StartVideoCommand;
 import com.mitosv.cinematic.networking.PacketHandler;
+import com.mitosv.cinematic.util.FancyEvents;
 import com.mitosv.cinematic.util.FileManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import nick1st.fancyvideo.api.DynamicResourceLocation;
@@ -33,46 +38,38 @@ public final class Cinematic {
 
     public static final Logger LOGGER = LogManager.getLogger();
 
-
-
-    static DynamicResourceLocation resourceLocation;
-
     private static boolean isServer;
-
-    private static boolean inCinematic;
 
     private static FileManager fileManager;
 
+
+
     public Cinematic() {
 
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(RegisterCommands.class);
 
     }
 
     private void onlyClient(){
         LOGGER.info("This is client version");
         MinecraftForge.EVENT_BUS.register(ClientHandler.class);
-        inCinematic = false;
+
+        FancyEvents fancyEvents = new FancyEvents();
+        fancyEvents.register();
 
         final File VIDEO_DIR = new File(Minecraft.getInstance().gameDirectory,"video");
-        ClientHandler.registerKey();
-        try {
-            FancyVideoEventBus.getInstance().registerEvent(this);
-        } catch(EventException.EventRegistryException | EventException.UnauthorizedRegistryException e) {
-            LOGGER.warn("A fatal API error occurred!");
-        }
         fileManager = new FileManager(VIDEO_DIR);
+
+        ClientHandler.register();
     }
 
     private void onlyServer(MinecraftServer MCserver){
         LOGGER.info("This is Server Version");
-        fileManager = new FileManager(new File(MCserver.getServerDirectory(),"video"));
+        final File VIDEO_DIR = new File(MCserver.getServerDirectory(),"video");
+        fileManager = new FileManager(VIDEO_DIR);
     }
 
     private void commonSetup(FMLCommonSetupEvent e){
@@ -81,50 +78,29 @@ public final class Cinematic {
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         isServer = false;
+
         onlyClient();
     }
-
-    private void enqueueIMC(final InterModEnqueueEvent event) {
-        // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("cinematic", "helloworld", () -> {
-            LOGGER.info("Hello world from the MDK");
-            return "Hello world";
-        });
-    }
-
 
 
     public static FileManager getFileManager() {
         return fileManager;
     }
 
-    public static boolean isInCinematic(){return inCinematic;}
-
-    public static void setCinematic(boolean inCinematic){Cinematic.inCinematic = inCinematic;}
-
     public static boolean isServer(){return isServer;}
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
+
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         isServer = true;
         onlyServer(event.getServer());
+        StartVideoCommand.register(event.getServer().getCommands().getDispatcher());
     }
 
-    @FancyVideoEvent
-    @SuppressWarnings("unused")
-    public void init(PlayerRegistryEvent.AddPlayerEvent event) {
-        resourceLocation = new DynamicResourceLocation(Cinematic.MOD_ID, "video");
-        event.handler().registerPlayerOnFreeResLoc(resourceLocation, SimpleMediaPlayer.class);
-        if (event.handler().getMediaPlayer(resourceLocation).providesAPI()) {
-            LOGGER.info("Correctly setup");
-        } else {
-            LOGGER.warn("Running in NO_LIBRARY_MODE");
-        }
+    @SubscribeEvent
+    public void onCommandRegister(RegisterCommandsEvent e){
+        StartVideoCommand.register(e.getDispatcher());
     }
 
-    public static DynamicResourceLocation getResourceLocation() {
-        return resourceLocation;
-    }
 
 }

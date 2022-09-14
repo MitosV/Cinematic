@@ -1,5 +1,6 @@
 package com.mitosv.cinematic.commands;
 
+import com.mitosv.cinematic.Cinematic;
 import com.mitosv.cinematic.networking.PacketHandler;
 import com.mitosv.cinematic.networking.message.SendVideoPlayer;
 import com.mitosv.cinematic.util.FileManager;
@@ -21,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.Collection;
 
@@ -30,16 +32,16 @@ public class StartVideoCommand {
             SharedSuggestionProvider.suggest(FileManager.getInstance().getFilesNames(), b);
 
     private static final SuggestionProvider<CommandSourceStack> INT = (a,b) ->
-            SharedSuggestionProvider.suggest(new String[]{"0","25","50","75","100","125","150","175","200"}, b);
+            SharedSuggestionProvider.suggest(new String[]{"50","100","150","200"}, b);
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher){
-        dispatcher.register(Commands.literal("playvideo")
+
+        dispatcher.register(Commands.literal("cinematic")
                 .then(Commands.argument("target", EntityArgument.players())
-                        .then(Commands.argument("volume", IntegerArgumentType.integer())
+                        .then(Commands.argument("volume",IntegerArgumentType.integer())
                                 .suggests(INT)
-                        .then(Commands.argument("archive", StringArgumentType.greedyString())
-                                .suggests(DIR)
-                                .executes(StartVideoCommand::execute)))));
+                                .then(Commands.argument("archive",StringArgumentType.greedyString())
+                                        .suggests(DIR).executes(StartVideoCommand::execute)))));
     }
 
     private static int execute(CommandContext<CommandSourceStack> command){
@@ -63,6 +65,7 @@ public class StartVideoCommand {
         for (ServerPlayer player : players) {
             PacketHandler.sendTo(new SendVideoPlayer(video,volume), player);
         }
+
 
         return Command.SINGLE_SUCCESS;
     }
