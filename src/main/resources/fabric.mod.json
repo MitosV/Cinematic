@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "cinematic",
+  "version": "${version}",
+  "name": "Cinematic Mod",
+  "description": "Display Video on Minecraft",
+  "authors": [
+    "MitosV"
+  ],
+  "contact": {
+    "repo": "https://github.com/MitosV/Cinematic"
+  },
+  "license": "MIT",
+  "icon": "assets/cinematic/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "server": [
+      "com.mitosv.cinematic.server.ServerHandler"
+    ],
+    "client": [
+      "com.mitosv.cinematic.client.ClientHandler"
+    ],
+    "main": [
+      "com.mitosv.cinematic.Cinematic"
+    ]
+  },
+  "mixins": [
+    "cinematic.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric": "*",
+    "fancyvideo_api": ">=1.0.0",
+    "minecraft": "1.18.2"
+  }
+}
