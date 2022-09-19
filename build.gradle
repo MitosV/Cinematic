@@ -4,9 +4,9 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-version = '1.0'
+version = '1.19.2-1.0-beta'
 group = 'com.mitosv.cinematic' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'cinematic'
+archivesBaseName = 'cinematic-forge'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -153,9 +153,9 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "cinematic",
+                "Specification-Title"     : "Cinematic",
                 "Specification-Vendor"    : "MitosV",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Version"   : "1.0-beta", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "MitosV",
