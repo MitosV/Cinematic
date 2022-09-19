@@ -2,15 +2,18 @@
   "schemaVersion": 1,
   "id": "cinematic",
   "version": "${version}",
-  "name": "Cinematic Mod",
+  "name": "Cinematic",
   "description": "Display Video on Minecraft",
   "authors": [
     "MitosV"
   ],
   "contact": {
-    "repo": "https://github.com/MitosV/Cinematic"
+    "repo": "https://github.com/MitosV/Cinematic",
+    "homepage": "https://modrinth.com/mod/cinematic",
+    "sources": "https://github.com/MitosV/Cinematic",
+    "issues": "https://github.com/MitosV/Cinematic/issues"
   },
-  "license": "MIT",
+  "license": "GNU",
   "icon": "assets/cinematic/icon.png",
   "environment": "*",
   "entrypoints": {
