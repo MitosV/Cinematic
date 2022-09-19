@@ -25,3 +25,5 @@
 - You can use direct links instead of the file name
 
 - You can use the ***@a*** to affect *all players*
+
+## Demo [Video](https://youtu.be/rDmIszajSco) in Youtube
