@@ -18,26 +18,13 @@ public class SendVideoPlayer {
 
 
 
-    public static void receive(MinecraftServer s, ServerPlayerEntity player,
-                               ServerPlayNetworkHandler handler, PacketByteBuf buf,
-                               PacketSender sender){
-        String name = buf.readString();
-        int volume = buf.readInt();
-        Video video = FileManager.getInstance().getVideoFromName(name);
-        Cinematic.LOGGER.info("Name: "+name);
-        Cinematic.LOGGER.info("Volume: "+volume);
-        Cinematic.LOGGER.info("Dir: "+s.getRunDirectory().getAbsolutePath());
-        Cinematic.LOGGER.info("This is server");
-    }
 
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         String name = buf.readString();
         int volume = buf.readInt();
-        Video video = FileManager.getInstance().getVideoFromName(name);
-        Cinematic.LOGGER.info("Name: "+name);
-        Cinematic.LOGGER.info("Volume: "+volume);
-        Cinematic.LOGGER.info("Dir: "+client.runDirectory.getAbsolutePath());
-        Cinematic.LOGGER.info("This is client");
+        Video video = FileManager.getInstance().getVideoFromName(name)==null ? new Video(name) :
+                FileManager.getInstance().getVideoFromName(name);
+
         ClientHandler.openVideo(client,video,volume);
     }
 

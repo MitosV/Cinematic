@@ -30,7 +30,9 @@
   "depends": {
     "fabricloader": ">=0.14.9",
     "fabric": "*",
-    "fancyvideo_api": ">=1.0.0",
-    "minecraft": "1.18.2"
+    "minecraft": ">=1.18"
+  },
+  "suggests": {
+    "fancyvideo_api": ">=1.0.0"
   }
 }

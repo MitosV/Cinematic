@@ -32,6 +32,7 @@ public class StartVideoCommand {
 
     }
 
+
     private static int execute(CommandContext<ServerCommandSource> command){
         Collection<ServerPlayerEntity> players;
         try {

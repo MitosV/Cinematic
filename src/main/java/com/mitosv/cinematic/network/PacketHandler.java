@@ -20,10 +20,6 @@ public class PacketHandler {
         ClientPlayNetworking.registerGlobalReceiver(NET_ID, SendVideoPlayer::receive);
     }
 
-    public static void registerServer(){
-        ServerPlayNetworking.registerGlobalReceiver(NET_ID, SendVideoPlayer::receive);
-    }
-
     public static void sendTo(ServerPlayerEntity player, String name, int volume){
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeString(name);

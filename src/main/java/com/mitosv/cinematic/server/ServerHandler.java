@@ -29,7 +29,7 @@ public class ServerHandler implements DedicatedServerModInitializer {
 
     public static void onlyServer(){
         Cinematic.fileManager = new FileManager(new File(server.getRunDirectory(),"video"));
-        PacketHandler.registerServer();
+
     }
 
 }

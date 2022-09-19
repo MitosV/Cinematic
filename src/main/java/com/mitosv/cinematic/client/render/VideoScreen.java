@@ -7,7 +7,7 @@ import com.mitosv.cinematic.util.Video;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -23,8 +23,7 @@ import uk.co.caprica.vlcj.player.base.MediaPlayer;
 import uk.co.caprica.vlcj.player.base.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.base.TitleDescription;
 
-public class VideoScreen extends HandledScreen<VideoScreenHandler> {
-
+public class VideoScreen extends Screen {
     boolean init = false;
     boolean stopped = true;
     Video video;
@@ -32,13 +31,10 @@ public class VideoScreen extends HandledScreen<VideoScreenHandler> {
     MediaPlayerBase mediaPlayer;
 
     public VideoScreen(Video video, int volume) {
-        super(new VideoScreenHandler(), MinecraftClient.getInstance().player != null ?
-                MinecraftClient.getInstance().player.getInventory() : null, Text.of(Cinematic.MOD_ID));
+        super(Text.of(""));
         this.video = video;
         this.volume = volume;
     }
-
-
     @Override
     protected void init(){
         super.init();
@@ -77,9 +73,11 @@ public class VideoScreen extends HandledScreen<VideoScreenHandler> {
                         public void paused(MediaPlayer mediaPlayer) {}
                         @Override
                         public void stopped(MediaPlayer mediaPlayer) {
-                            if (!stopped){
-                                close();
-                            }
+                            MinecraftClient.getInstance().execute(()->{
+                                if (!stopped){
+                                    close();
+                                }
+                            });
                         }
                         @Override
                         public void forward(MediaPlayer mediaPlayer) {}
@@ -145,7 +143,7 @@ public class VideoScreen extends HandledScreen<VideoScreenHandler> {
 
 
     @Override
-    public void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta){
         mediaPlayer = (MediaPlayerBase) MediaPlayerHandler.getInstance().getMediaPlayer(FancyEvents.getResourceLocation());
         if (MediaPlayerHandler.getInstance().getMediaPlayer(FancyEvents.getResourceLocation()).providesAPI()) {
             if (!init) {
@@ -191,10 +189,11 @@ public class VideoScreen extends HandledScreen<VideoScreenHandler> {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if(keyCode == 67){
+        if(KeyBinding.EXIT_KEY.matchesKey(keyCode,scanCode)){
             this.close();
             return true;
-        }else return false;
+        }else
+            return false;
     }
 
     @Override
@@ -211,4 +210,5 @@ public class VideoScreen extends HandledScreen<VideoScreenHandler> {
         }
         super.close();
     }
+
 }
