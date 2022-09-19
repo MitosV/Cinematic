@@ -25,17 +25,17 @@ import java.util.function.Supplier;
 public class ClientHandler {
 
     public static void handlePacket(SendVideoPlayer msg, Supplier<NetworkEvent.Context> ctx){
-        Video video = FileManager.getInstance().getVideoFromName(msg.name);
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (video == null){
-            player.sendMessage(new TextComponent("Dont have "+video.getName()+" file"),player.getUUID());
-            return;
-        }
+        Video video =
+                FileManager.getInstance().getVideoFromName(msg.name) == null
+                ? new Video(msg.name) :
+                        FileManager.getInstance().getVideoFromName(msg.name);
         openVideo(video, msg.volume);
     }
 
     public static void openVideo(Video video, int volume) {
-        Minecraft.getInstance().setScreen(new VideoScreen(video,volume));
+        Minecraft.getInstance().execute(()->{
+            Minecraft.getInstance().setScreen(new VideoScreen(video,volume));
+        });
     }
 
     public static void register(){
